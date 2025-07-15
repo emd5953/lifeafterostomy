@@ -11,13 +11,13 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex justify-center mb-8">
-                <Image 
-                  src="/assets/LAOLogo_3.jpg" 
-                  alt="Life After Ostomy Logo" 
-                  width={110}
-                  height={110}
-                  className="object-contain"
-                />
+              <Image 
+                src="/assets/LAOLogo_3.jpg" 
+                alt="Life After Ostomy Logo" 
+                width={128}
+                height={128}
+                className="object-contain"
+              />
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               About Life After Ostomy

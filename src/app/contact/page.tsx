@@ -79,7 +79,7 @@ export default function ContactPage() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Email Us</h3>
                   <p className="text-gray-600 mb-2">Send us a message anytime</p>
                   <a href="mailto:info@lifeafterostomy.com" className="text-emerald-600 hover:text-emerald-800 font-medium">
-                    info@lifeafterostomy.com
+                    lifeafterostomyllc@gmail.com
                   </a>
                 </div>
               </div>

@@ -1,50 +1,41 @@
 // src/app/products/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Product } from '@/types/database'
-import { ShoppingCart, Filter, Search } from 'lucide-react'
+import { ShoppingCart, Search } from 'lucide-react'
+
+interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  category: 'care-kit' | 'individual-item' | 'book'
+  ostomy_type: 'colostomy' | 'ileostomy' | 'urostomy' | 'universal'
+  stock_quantity: number
+  created_at: string
+  updated_at?: string
+  image_url?: string
+  sku?: string
+}
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [selectedOstomyType, setSelectedOstomyType] = useState<string>('')
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
-
-  useEffect(() => {
-    filterProducts()
-  }, [products, searchTerm, selectedCategory, selectedOstomyType])
-
-  const fetchProducts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('name')
-
-      if (error) throw error
-      setProducts(data || [])
-    } catch (error) {
-      console.error('Error fetching products:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const filterProducts = () => {
+  const filterProducts = useCallback(() => {
     let filtered = products
 
-    if (searchTerm) {
+    if (searchTerm.trim()) {
+      const searchLower = searchTerm.toLowerCase()
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+        product.name.toLowerCase().includes(searchLower) ||
+        product.description.toLowerCase().includes(searchLower)
       )
     }
 
@@ -59,11 +50,53 @@ export default function ProductsPage() {
     }
 
     setFilteredProducts(filtered)
-  }
+  }, [products, searchTerm, selectedCategory, selectedOstomyType])
 
-  const addToCart = async (product: Product) => {
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError('')
+      
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('name')
+
+      if (error) {
+        throw new Error(error.message)
+      }
+      
+      setProducts(data || [])
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load products'
+      setError(errorMessage)
+      console.error('Error fetching products:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchProducts()
+  }, [fetchProducts])
+
+  useEffect(() => {
+    filterProducts()
+  }, [filterProducts])
+
+  const addToCart = (product: Product) => {
     // For now, just show an alert. Later we'll implement cart functionality
     alert(`Added ${product.name} to cart!`)
+  }
+
+  const clearFilters = () => {
+    setSearchTerm('')
+    setSelectedCategory('')
+    setSelectedOstomyType('')
+  }
+
+  const formatCategoryName = (category: string) => {
+    return category.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
   }
 
   if (loading) {
@@ -72,6 +105,24 @@ export default function ProductsPage() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading products...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Unable to Load Products</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button
+            onClick={fetchProducts}
+            className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     )
@@ -131,11 +182,7 @@ export default function ProductsPage() {
 
             {/* Clear Filters */}
             <button
-              onClick={() => {
-                setSearchTerm('')
-                setSelectedCategory('')
-                setSelectedOstomyType('')
-              }}
+              onClick={clearFilters}
               className="px-4 py-2 text-emerald-700 border border-emerald-300 rounded-lg hover:bg-emerald-50 transition-colors font-medium"
             >
               Clear Filters
@@ -151,90 +198,96 @@ export default function ProductsPage() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow border border-gray-100">
-              {/* Product Image Placeholder */}
-              <div className={`h-48 flex items-center justify-center ${
-                product.category === 'care-kit' ? 'bg-gradient-to-br from-emerald-100 to-emerald-200' :
-                product.category === 'book' ? 'bg-gradient-to-br from-teal-100 to-teal-200' :
-                'bg-gradient-to-br from-cyan-100 to-cyan-200'
-              }`}>
-                <div className={`text-center ${
-                  product.category === 'care-kit' ? 'text-emerald-700' :
-                  product.category === 'book' ? 'text-teal-700' :
-                  'text-cyan-700'
-                } text-sm font-medium`}>
-                  <div className="text-2xl mb-2">
-                    {product.category === 'care-kit' && '📦'}
-                    {product.category === 'book' && '📚'}
-                    {product.category === 'individual-item' && '🔧'}
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow border border-gray-100">
+                {/* Product Image Placeholder */}
+                <div className={`h-48 flex items-center justify-center ${
+                  product.category === 'care-kit' ? 'bg-gradient-to-br from-emerald-100 to-emerald-200' :
+                  product.category === 'book' ? 'bg-gradient-to-br from-teal-100 to-teal-200' :
+                  'bg-gradient-to-br from-cyan-100 to-cyan-200'
+                }`}>
+                  <div className={`text-center ${
+                    product.category === 'care-kit' ? 'text-emerald-700' :
+                    product.category === 'book' ? 'text-teal-700' :
+                    'text-cyan-700'
+                  } text-sm font-medium`}>
+                    <div className="text-2xl mb-2">
+                      {product.category === 'care-kit' && '📦'}
+                      {product.category === 'book' && '📚'}
+                      {product.category === 'individual-item' && '🔧'}
+                    </div>
+                    Image Coming Soon
                   </div>
-                  Image Coming Soon
+                </div>
+
+                <div className="p-4">
+                  {/* Category Badge */}
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                      product.category === 'care-kit' ? 'bg-emerald-100 text-emerald-800' :
+                      product.category === 'book' ? 'bg-teal-100 text-teal-800' :
+                      'bg-cyan-100 text-cyan-800'
+                    }`}>
+                      {formatCategoryName(product.category)}
+                    </span>
+                    <span className="text-xs text-gray-500 capitalize font-medium">
+                      {product.ostomy_type}
+                    </span>
+                  </div>
+
+                  {/* Product Name */}
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                    {product.name}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                    {product.description}
+                  </p>
+
+                  {/* Price and Stock */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-xl font-bold text-gray-900">
+                      ${product.price.toFixed(2)}
+                    </span>
+                    <span className={`text-sm font-medium ${
+                      product.stock_quantity > 10 ? 'text-emerald-600' :
+                      product.stock_quantity > 0 ? 'text-yellow-600' :
+                      'text-red-600'
+                    }`}>
+                      {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
+                    </span>
+                  </div>
+
+                  {/* Add to Cart Button */}
+                  <button
+                    onClick={() => addToCart(product)}
+                    disabled={product.stock_quantity === 0}
+                    className="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-medium"
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    {product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
+                  </button>
                 </div>
               </div>
-
-              <div className="p-4">
-                {/* Category Badge */}
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                    product.category === 'care-kit' ? 'bg-emerald-100 text-emerald-800' :
-                    product.category === 'book' ? 'bg-teal-100 text-teal-800' :
-                    'bg-cyan-100 text-cyan-800'
-                  }`}>
-                    {product.category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  </span>
-                  <span className="text-xs text-gray-500 capitalize font-medium">
-                    {product.ostomy_type}
-                  </span>
-                </div>
-
-                {/* Product Name */}
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                  {product.name}
-                </h3>
-
-                {/* Description */}
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                  {product.description}
-                </p>
-
-                {/* Price and Stock */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-xl font-bold text-gray-900">
-                    ${product.price}
-                  </span>
-                  <span className={`text-sm font-medium ${
-                    product.stock_quantity > 10 ? 'text-emerald-600' :
-                    product.stock_quantity > 0 ? 'text-yellow-600' :
-                    'text-red-600'
-                  }`}>
-                    {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
-                  </span>
-                </div>
-
-                {/* Add to Cart Button */}
-                <button
-                  onClick={() => addToCart(product)}
-                  disabled={product.stock_quantity === 0}
-                  className="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-medium"
-                >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  {product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* No Results */}
-        {filteredProducts.length === 0 && (
+            ))}
+          </div>
+        ) : (
+          /* No Results */
           <div className="text-center py-12">
             <div className="text-gray-400 text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-            <p className="text-gray-600">
-              Try adjusting your search terms or filters to find what you're looking for.
+            <p className="text-gray-600 mb-4">
+              Try adjusting your search terms or filters to find what you&apos;re looking for.
             </p>
+            <button
+              onClick={clearFilters}
+              className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              Clear All Filters
+            </button>
           </div>
         )}
 
