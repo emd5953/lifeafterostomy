@@ -46,13 +46,13 @@ export default function RootLayout({
                   <div>
                     <h5 className="text-md font-semibold mb-2 text-white">LAO Newsletter</h5>
                     <p className="text-sm text-emerald-100 mb-3">Stay updated with tips and resources</p>
-                    <div className="flex w-60">
+                    <div className="flex w-100">
                       <input 
                         type="email" 
                         placeholder="Your email" 
-                        className="flex-1 px-2 py-1 text-gray-900 rounded-l-md text-xs"
+                        className="flex-1 px-3 py-2 text-white-900 rounded-l-md text-sm"
                       />
-                      <button className="bg-emerald-600 hover:bg-emerald-700 px-3 py-1 rounded-r-md text-xs font-medium transition-colors">
+                      <button className="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-r-md text-xs font-medium transition-colors">
                         Subscribe
                       </button>
                     </div>

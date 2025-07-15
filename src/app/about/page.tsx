@@ -1,5 +1,6 @@
 // src/app/about/page.tsx
 import Link from 'next/link'
+import Image from 'next/image'
 import { Heart, Users, Award, BookOpen, Shield, Globe } from 'lucide-react'
 
 export default function AboutPage() {
@@ -10,13 +11,13 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex justify-center mb-8">
-              <div className="h-24 w-24 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <img 
+                <Image 
                   src="/assets/LAOLogo_3.jpg" 
                   alt="Life After Ostomy Logo" 
-                  className="h-16 w-auto object-contain"
+                  width={110}
+                  height={110}
+                  className="object-contain"
                 />
-              </div>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               About Life After Ostomy
@@ -41,17 +42,17 @@ export default function AboutPage() {
                 <p>
                   Life After Ostomy was founded with a simple yet powerful mission: to ensure that no one 
                   faces their ostomy journey alone. We understand that receiving an ostomy can be 
-                  life-changing, and we're here to make that change as positive as possible.
+                  life-changing, and we&apos;re here to make that change as positive as possible.
                 </p>
                 <p>
-                  Our founder's personal experience with ostomy surgery revealed a gap in comprehensive 
+                  Our founder&apos;s personal experience with ostomy surgery revealed a gap in comprehensive 
                   care and support. From that moment, we knew we had to create something better – a 
                   complete resource hub that provides not just products, but education, community, and hope.
                 </p>
                 <p>
                   Today, we serve thousands of individuals and families, helping them navigate their 
-                  ostomy journey with confidence, dignity, and joy. Because life after ostomy isn't 
-                  just about surviving – it's about thriving.
+                  ostomy journey with confidence, dignity, and joy. Because life after ostomy isn&apos;t 
+                  just about surviving – it&apos;s about thriving.
                 </p>
               </div>
             </div>
@@ -252,8 +253,8 @@ export default function AboutPage() {
             Ready to Start Your Journey?
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Whether you're preparing for surgery, newly post-op, or years into your ostomy journey, 
-            we're here to support you every step of the way.
+            Whether you&apos;re preparing for surgery, newly post-op, or years into your ostomy journey, 
+            we&apos;re here to support you every step of the way.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

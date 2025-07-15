@@ -13,6 +13,7 @@ export default function ContactPage() {
     inquiryType: 'general'
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState('')
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -25,19 +26,24 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitMessage('')
     
     // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    alert('Thank you for your message! We\'ll get back to you soon.')
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-      inquiryType: 'general'
-    })
-    setIsSubmitting(false)
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      setSubmitMessage('Thank you for your message! We will get back to you soon.')
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+        inquiryType: 'general'
+      })
+    } catch (error) {
+      setSubmitMessage('There was an error sending your message. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -50,7 +56,7 @@ export default function ContactPage() {
               Contact Us
             </h1>
             <p className="text-xl md:text-2xl max-w-3xl mx-auto">
-              We're here to help you on your ostomy journey. Reach out with any questions, 
+              We are here to help you on your ostomy journey. Reach out with any questions, 
               concerns, or feedback.
             </p>
           </div>
@@ -73,7 +79,7 @@ export default function ContactPage() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">Email Us</h3>
                   <p className="text-gray-600 mb-2">Send us a message anytime</p>
                   <a href="mailto:info@lifeafterostomy.com" className="text-emerald-600 hover:text-emerald-800 font-medium">
-                    lifeafterostomyllc@gmail.com
+                    info@lifeafterostomy.com
                   </a>
                 </div>
               </div>
@@ -251,6 +257,16 @@ export default function ContactPage() {
                   />
                 </div>
 
+                {submitMessage && (
+                  <div className={`p-4 rounded-lg ${
+                    submitMessage.includes('error') 
+                      ? 'bg-red-50 border border-red-200 text-red-600' 
+                      : 'bg-emerald-50 border border-emerald-200 text-emerald-600'
+                  }`}>
+                    {submitMessage}
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -302,7 +318,7 @@ export default function ContactPage() {
             <div className="bg-white rounded-xl p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Do you accept insurance?</h3>
               <p className="text-gray-600">
-                We work with many insurance providers. Contact us with your insurance information and we'll help verify coverage.
+                We work with many insurance providers. Contact us with your insurance information and we will help verify coverage.
               </p>
             </div>
 
