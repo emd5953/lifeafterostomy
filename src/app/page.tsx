@@ -4,11 +4,21 @@ import { ShoppingBag, BookOpen, Users, Heart } from 'lucide-react'
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+      <section className="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
+            {/* Large logo in hero */}
+            <div className="flex justify-center mb-8">
+              <div className="rounded-xl p-4 shadow-lg">
+                <img 
+                  src="/assets/LAOLogo_3.jpg" 
+                  alt="Life After Ostomy Logo" 
+                  className="h-32 w-auto object-contain"
+                />
+              </div>
+            </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Life After Ostomy
             </h1>
@@ -19,13 +29,13 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/products"
-                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                className="bg-white text-emerald-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg"
               >
                 Shop Care Kits
               </Link>
               <Link
-                href="/ostomy-knowledge"
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
+                href="/about"
+                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-emerald-700 transition-colors"
               >
                 Learn More
               </Link>
@@ -48,40 +58,40 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShoppingBag className="h-8 w-8 text-blue-600" />
+              <div className="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <ShoppingBag className="h-8 w-8 text-emerald-700" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Complete Care Kits</h3>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">Complete Care Kits</h3>
               <p className="text-gray-600">
                 Everything you need for ostomy care in convenient, organized kits
               </p>
             </div>
 
             <div className="text-center">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="h-8 w-8 text-green-600" />
+              <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="h-8 w-8 text-teal-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Educational Books</h3>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">Educational Books</h3>
               <p className="text-gray-600">
                 Books about life after ostomy for all age groups
               </p>
             </div>
 
             <div className="text-center">
-              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-purple-600" />
+              <div className="bg-cyan-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-cyan-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Community Support</h3>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">Community Support</h3>
               <p className="text-gray-600">
                 Connect with others and access valuable resources
               </p>
             </div>
 
             <div className="text-center">
-              <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="h-8 w-8 text-red-600" />
+              <div className="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Heart className="h-8 w-8 text-emerald-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Ongoing Care</h3>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">Ongoing Care</h3>
               <p className="text-gray-600">
                 Easy reordering and personalized recommendations
               </p>
@@ -91,7 +101,7 @@ export default function Home() {
       </section>
 
       {/* Product Categories */}
-      <section className="py-16">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -100,48 +110,48 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="h-48 bg-gradient-to-br from-blue-400 to-blue-600"></div>
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="h-48 bg-gradient-to-br from-emerald-500 to-emerald-700"></div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">Complete Care Kits</h3>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">Complete Care Kits</h3>
                 <p className="text-gray-600 mb-4">
                   Comprehensive kits with everything needed for ostomy care
                 </p>
                 <Link
                   href="/products?category=care-kit"
-                  className="text-blue-600 hover:text-blue-800 font-semibold"
+                  className="text-emerald-600 hover:text-emerald-800 font-semibold inline-flex items-center"
                 >
                   Shop Care Kits →
                 </Link>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="h-48 bg-gradient-to-br from-green-400 to-green-600"></div>
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="h-48 bg-gradient-to-br from-teal-400 to-teal-600"></div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">Individual Items</h3>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">Individual Items</h3>
                 <p className="text-gray-600 mb-4">
                   Individual ostomy supplies for specific needs
                 </p>
                 <Link
                   href="/products?category=individual-item"
-                  className="text-blue-600 hover:text-blue-800 font-semibold"
+                  className="text-teal-600 hover:text-teal-800 font-semibold inline-flex items-center"
                 >
                   Shop Individual Items →
                 </Link>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <div className="h-48 bg-gradient-to-br from-purple-400 to-purple-600"></div>
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow">
+              <div className="h-48 bg-gradient-to-br from-cyan-400 to-cyan-600"></div>
               <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">Educational Books</h3>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">Educational Books</h3>
                 <p className="text-gray-600 mb-4">
                   Books about life after ostomy for all ages
                 </p>
                 <Link
                   href="/products?category=book"
-                  className="text-blue-600 hover:text-blue-800 font-semibold"
+                  className="text-cyan-600 hover:text-cyan-800 font-semibold inline-flex items-center"
                 >
                   Shop Books →
                 </Link>
@@ -152,7 +162,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-blue-600 text-white py-16">
+      <section className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Get Started?
@@ -162,7 +172,7 @@ export default function Home() {
           </p>
           <Link
             href="/products"
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors inline-block"
+            className="bg-white text-emerald-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-block shadow-lg"
           >
             Shop Now
           </Link>

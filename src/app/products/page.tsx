@@ -68,9 +68,9 @@ export default function ProductsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading products...</p>
         </div>
       </div>
@@ -90,7 +90,7 @@ export default function ProductsPage() {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
             <div className="relative">
@@ -98,7 +98,7 @@ export default function ProductsPage() {
               <input
                 type="text"
                 placeholder="Search products..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -106,7 +106,7 @@ export default function ProductsPage() {
 
             {/* Category Filter */}
             <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -118,7 +118,7 @@ export default function ProductsPage() {
 
             {/* Ostomy Type Filter */}
             <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               value={selectedOstomyType}
               onChange={(e) => setSelectedOstomyType(e.target.value)}
             >
@@ -136,7 +136,7 @@ export default function ProductsPage() {
                 setSelectedCategory('')
                 setSelectedOstomyType('')
               }}
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 text-emerald-700 border border-emerald-300 rounded-lg hover:bg-emerald-50 transition-colors font-medium"
             >
               Clear Filters
             </button>
@@ -145,7 +145,7 @@ export default function ProductsPage() {
 
         {/* Results Count */}
         <div className="mb-6">
-          <p className="text-gray-600">
+          <p className="text-gray-600 font-medium">
             Showing {filteredProducts.length} of {products.length} products
           </p>
         </div>
@@ -153,14 +153,23 @@ export default function ProductsPage() {
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
-            <div key={product.id} className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow border border-gray-100">
               {/* Product Image Placeholder */}
-              <div className="h-48 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
-                <div className="text-blue-600 text-sm font-medium">
-                  {product.category === 'care-kit' && '📦'}
-                  {product.category === 'book' && '📚'}
-                  {product.category === 'individual-item' && '🔧'}
-                  <br />
+              <div className={`h-48 flex items-center justify-center ${
+                product.category === 'care-kit' ? 'bg-gradient-to-br from-emerald-100 to-emerald-200' :
+                product.category === 'book' ? 'bg-gradient-to-br from-teal-100 to-teal-200' :
+                'bg-gradient-to-br from-cyan-100 to-cyan-200'
+              }`}>
+                <div className={`text-center ${
+                  product.category === 'care-kit' ? 'text-emerald-700' :
+                  product.category === 'book' ? 'text-teal-700' :
+                  'text-cyan-700'
+                } text-sm font-medium`}>
+                  <div className="text-2xl mb-2">
+                    {product.category === 'care-kit' && '📦'}
+                    {product.category === 'book' && '📚'}
+                    {product.category === 'individual-item' && '🔧'}
+                  </div>
                   Image Coming Soon
                 </div>
               </div>
@@ -168,14 +177,14 @@ export default function ProductsPage() {
               <div className="p-4">
                 {/* Category Badge */}
                 <div className="flex items-center justify-between mb-2">
-                  <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                    product.category === 'care-kit' ? 'bg-blue-100 text-blue-800' :
-                    product.category === 'book' ? 'bg-green-100 text-green-800' :
-                    'bg-purple-100 text-purple-800'
+                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                    product.category === 'care-kit' ? 'bg-emerald-100 text-emerald-800' :
+                    product.category === 'book' ? 'bg-teal-100 text-teal-800' :
+                    'bg-cyan-100 text-cyan-800'
                   }`}>
                     {product.category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
                   </span>
-                  <span className="text-xs text-gray-500 capitalize">
+                  <span className="text-xs text-gray-500 capitalize font-medium">
                     {product.ostomy_type}
                   </span>
                 </div>
@@ -195,8 +204,8 @@ export default function ProductsPage() {
                   <span className="text-xl font-bold text-gray-900">
                     ${product.price}
                   </span>
-                  <span className={`text-sm ${
-                    product.stock_quantity > 10 ? 'text-green-600' :
+                  <span className={`text-sm font-medium ${
+                    product.stock_quantity > 10 ? 'text-emerald-600' :
                     product.stock_quantity > 0 ? 'text-yellow-600' :
                     'text-red-600'
                   }`}>
@@ -208,7 +217,7 @@ export default function ProductsPage() {
                 <button
                   onClick={() => addToCart(product)}
                   disabled={product.stock_quantity === 0}
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                  className="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-medium"
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
                   {product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
@@ -230,30 +239,30 @@ export default function ProductsPage() {
         )}
 
         {/* External Links Section */}
-        <div className="mt-16 bg-white rounded-lg shadow-sm p-8">
+        <div className="mt-16 bg-white rounded-xl shadow-sm p-8 border border-gray-100">
           <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
             Also Available On
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <a
               href="#"
-              className="flex items-center justify-center p-6 border-2 border-orange-200 rounded-lg hover:border-orange-400 transition-colors"
+              className="flex items-center justify-center p-6 border-2 border-orange-200 rounded-xl hover:border-orange-400 hover:shadow-md transition-all duration-200"
             >
               <div className="text-center">
-                <div className="text-3xl mb-2">📦</div>
-                <h3 className="text-lg font-semibold text-gray-900">Amazon Store</h3>
-                <p className="text-gray-600">Shop our books and select products on Amazon</p>
+                <div className="text-4xl mb-3">📦</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">Amazon Store</h3>
+                <p className="text-gray-600 text-sm">Shop our books and select products on Amazon</p>
               </div>
             </a>
             
             <a
               href="#"
-              className="flex items-center justify-center p-6 border-2 border-green-200 rounded-lg hover:border-green-400 transition-colors"
+              className="flex items-center justify-center p-6 border-2 border-emerald-200 rounded-xl hover:border-emerald-400 hover:shadow-md transition-all duration-200"
             >
               <div className="text-center">
-                <div className="text-3xl mb-2">🛒</div>
-                <h3 className="text-lg font-semibold text-gray-900">Shopify Store</h3>
-                <p className="text-gray-600">Complete selection of ostomy care kits</p>
+                <div className="text-4xl mb-3">🛒</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">Shopify Store</h3>
+                <p className="text-gray-600 text-sm">Complete selection of ostomy care kits</p>
               </div>
             </a>
           </div>

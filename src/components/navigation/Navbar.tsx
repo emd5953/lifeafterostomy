@@ -2,172 +2,276 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
-import { User } from '@supabase/supabase-js'
-import { Menu, X, ShoppingCart, User as UserIcon } from 'lucide-react'
+import { ShoppingCart, User, Menu, X, ChevronDown, LogOut } from 'lucide-react'
+import { useState } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-    }
-    getUser()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null)
-      }
-    )
-
-    return () => subscription.unsubscribe()
-  }, [])
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false)
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
+  const { user, loading, signOut } = useAuth()
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
+    await signOut()
+    setIsUserDropdownOpen(false)
   }
 
-  const mainNavItems = [
-    { name: 'About Us', href: '/about' },
-    { name: 'Products', href: '/products' },
-    { name: 'Contact Us', href: '/contact' },
-  ]
-
-  const ostomyNavItems = [
-    { name: 'Ostomy News', href: '/ostomy-news' },
-    { name: 'Ostomy Knowledge', href: '/ostomy-knowledge' },
-    { name: 'Ostomy Events', href: '/ostomy-events' },
-  ]
-
   return (
-    <nav className="bg-white shadow-lg">
+    <nav className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="text-2xl font-bold text-blue-600">
-              Life After Ostomy
+        <div className="flex justify-between items-center h-16">
+          {/* Logo and Brand */}
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center">
+              <div className="h-10 w-auto mr-3">
+                <img 
+                  src="/assets/LAOLogo_3.jpg" 
+                  alt="Life After Ostomy Logo" 
+                  className="h-10 w-auto object-contain"
+                />
+              </div>
+              <span className="text-xl font-bold text-emerald-700">Life After Ostomy</span>
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
-            {mainNavItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
+            <Link href="/about" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">
+              About Us
+            </Link>
             
-            {/* Ostomy Section */}
-            <div className="border-l pl-8 ml-8">
-              {ostomyNavItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-
-            {/* User Section */}
-            <div className="flex items-center space-x-4">
-              <ShoppingCart className="h-6 w-6 text-gray-700 hover:text-blue-600 cursor-pointer" />
+            {/* Shop Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsShopDropdownOpen(!isShopDropdownOpen)}
+                className="flex items-center text-gray-700 hover:text-emerald-600 font-medium transition-colors"
+              >
+                Shop
+                <ChevronDown className="ml-1 h-4 w-4" />
+              </button>
               
-              {user ? (
-                <div className="relative">
-                  <button
-                    onClick={handleSignOut}
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+              {isShopDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                  <Link 
+                    href="/products?category=individual-item" 
+                    className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                    onClick={() => setIsShopDropdownOpen(false)}
                   >
-                    Sign Out
-                  </button>
-                  <Link
-                    href="/dashboard"
-                    className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
+                    Post Ostomy Care Items (A la Carte)
+                  </Link>
+                  <Link 
+                    href="/products?category=care-kit" 
+                    className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                    onClick={() => setIsShopDropdownOpen(false)}
                   >
-                    Dashboard
+                    Post Ostomy Care Kits
+                  </Link>
+                  <Link 
+                    href="/products?category=book" 
+                    className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                    onClick={() => setIsShopDropdownOpen(false)}
+                  >
+                    Life After Ostomy Books
                   </Link>
                 </div>
-              ) : (
-                <Link
-                  href="/login"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium flex items-center"
-                >
-                  <UserIcon className="h-4 w-4 mr-1" />
-                  Login
-                </Link>
               )}
             </div>
+
+            <Link href="/contact" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">
+              Contact Us
+            </Link>
+            <Link href="/ostomy-news" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">
+              Latest Ostomy News
+            </Link>
+            <Link href="/ostomy-knowledge" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">
+              Ostomy Knowledge
+            </Link>
+            <Link href="/conferences" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors">
+              Conferences
+            </Link>
+          </div>
+
+          {/* Right side icons */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Link href="/cart" className="text-gray-700 hover:text-emerald-600 transition-colors">
+              <ShoppingCart className="h-6 w-6" />
+            </Link>
+            
+            {loading ? (
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-600"></div>
+            ) : user ? (
+              /* User is logged in */
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                  className="flex items-center text-gray-700 hover:text-emerald-600 transition-colors"
+                >
+                  <User className="h-5 w-5 mr-1" />
+                  <span className="font-medium">
+                    {user.user_metadata?.username || user.user_metadata?.full_name || 'Account'}
+                  </span>
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </button>
+                
+                {isUserDropdownOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    <Link 
+                      href="/dashboard" 
+                      className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                      onClick={() => setIsUserDropdownOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Link 
+                      href="/profile" 
+                      className="block px-4 py-2 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 transition-colors"
+                      onClick={() => setIsUserDropdownOpen(false)}
+                    >
+                      Profile
+                    </Link>
+                    <div className="border-t border-gray-200 my-1"></div>
+                    <button 
+                      onClick={handleSignOut}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* User is not logged in */
+              <Link href="/login" className="flex items-center text-gray-700 hover:text-emerald-600 transition-colors">
+                <User className="h-5 w-5 mr-1" />
+                <span className="font-medium">Login</span>
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden">
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-gray-700 hover:text-emerald-600 transition-colors"
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {[...mainNavItems, ...ostomyNavItems].map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+        {/* Mobile Navigation Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden border-t border-gray-200 py-4">
+            <div className="flex flex-col space-y-4">
+              <Link 
+                href="/about" 
+                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors px-4 py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About Us
+              </Link>
               
-              {user ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium"
-                    onClick={() => setIsOpen(false)}
+              {/* Mobile Shop Section */}
+              <div className="px-4">
+                <div className="font-medium text-gray-900 mb-2">Shop</div>
+                <div className="pl-4 space-y-2">
+                  <Link 
+                    href="/products?category=individual-item" 
+                    className="block text-gray-700 hover:text-emerald-600 transition-colors py-1"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    Dashboard
+                    Post Ostomy Care Items (A la Carte)
                   </Link>
-                  <button
-                    onClick={() => {
-                      handleSignOut()
-                      setIsOpen(false)
-                    }}
-                    className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium w-full text-left"
+                  <Link 
+                    href="/products?category=care-kit" 
+                    className="block text-gray-700 hover:text-emerald-600 transition-colors py-1"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                <Link
-                  href="/login"
-                  className="text-gray-700 hover:text-blue-600 block px-3 py-2 text-base font-medium"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Login
+                    Post Ostomy Care Kits
+                  </Link>
+                  <Link 
+                    href="/products?category=book" 
+                    className="block text-gray-700 hover:text-emerald-600 transition-colors py-1"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Life After Ostomy Books
+                  </Link>
+                </div>
+              </div>
+              
+              <Link 
+                href="/contact" 
+                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors px-4 py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact Us
+              </Link>
+              <Link 
+                href="/ostomy-news" 
+                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors px-4 py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Latest Ostomy News
+              </Link>
+              <Link 
+                href="/ostomy-knowledge" 
+                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors px-4 py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Ostomy Knowledge
+              </Link>
+              <Link 
+                href="/conferences" 
+                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors px-4 py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Conferences
+              </Link>
+              
+              <div className="flex items-center space-x-4 px-4 py-2">
+                <Link href="/cart" className="text-gray-700 hover:text-emerald-600 transition-colors">
+                  <ShoppingCart className="h-6 w-6" />
                 </Link>
-              )}
+                
+                {user ? (
+                  <div className="flex flex-col space-y-2">
+                    <Link href="/dashboard" className="text-gray-700 hover:text-emerald-600 transition-colors">
+                      Dashboard
+                    </Link>
+                    <Link href="/profile" className="text-gray-700 hover:text-emerald-600 transition-colors">
+                      Profile
+                    </Link>
+                    <button 
+                      onClick={handleSignOut}
+                      className="text-left text-red-600 hover:text-red-800 transition-colors"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <Link href="/login" className="flex items-center text-gray-700 hover:text-emerald-600 transition-colors">
+                    <User className="h-5 w-5 mr-1" />
+                    <span className="font-medium">Login</span>
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         )}
       </div>
+      
+      {/* Overlays to close dropdowns when clicking outside */}
+      {(isShopDropdownOpen || isUserDropdownOpen) && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => {
+            setIsShopDropdownOpen(false)
+            setIsUserDropdownOpen(false)
+          }}
+        />
+      )}
     </nav>
   )
 }
