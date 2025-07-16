@@ -4,9 +4,25 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
+interface Product {
+  id: string
+  name: string
+  price: number
+  category: string
+  stock_quantity: number
+}
+
+interface ContentItem {
+  id: string
+  title: string
+  type: string
+  author: string
+  excerpt: string
+}
+
 export default function TestDatabase() {
-  const [products, setProducts] = useState<any[]>([])
-  const [content, setContent] = useState<any[]>([])
+  const [products, setProducts] = useState<Product[]>([])
+  const [content, setContent] = useState<ContentItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [connectionStatus, setConnectionStatus] = useState<string>('Testing...')
@@ -18,7 +34,7 @@ export default function TestDatabase() {
   const testConnection = async () => {
     try {
       // Test basic connection
-      const { data: healthCheck, error: healthError } = await supabase
+      const { error: healthError } = await supabase
         .from('products')
         .select('count')
         .limit(1)
@@ -56,9 +72,10 @@ export default function TestDatabase() {
         setContent(contentData || [])
       }
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       setConnectionStatus('❌ Connection Failed')
-      setError(err.message)
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

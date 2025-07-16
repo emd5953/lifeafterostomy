@@ -1,11 +1,10 @@
 // src/app/profile/page.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { User, Mail, Calendar, Heart, ShoppingBag, BookOpen, LogOut, Edit2, Save, X } from 'lucide-react'
-import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 interface UserProfile {
   id: string
@@ -17,7 +16,6 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<SupabaseUser | null>(null)
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
@@ -30,11 +28,7 @@ export default function ProfilePage() {
   const [message, setMessage] = useState('')
   const router = useRouter()
 
-  useEffect(() => {
-    checkUser()
-  }, [])
-
-  const checkUser = async () => {
+  const checkUser = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       
@@ -42,8 +36,6 @@ export default function ProfilePage() {
         router.push('/login')
         return
       }
-
-      setUser(user)
       
       // Get additional profile data from user metadata and database
       let profileData: UserProfile = {
@@ -71,7 +63,7 @@ export default function ProfilePage() {
             ostomy_type: dbProfile.ostomy_type || profileData.ostomy_type
           }
         }
-      } catch (error) {
+      } catch {
         console.log('No profile found in database, using metadata')
       }
       
@@ -81,19 +73,23 @@ export default function ProfilePage() {
         username: profileData.username,
         ostomy_type: profileData.ostomy_type
       })
-    } catch (error) {
-      console.error('Error fetching user:', error)
+    } catch (userError) {
+      console.error('Error fetching user:', userError)
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    checkUser()
+  }, [checkUser])
 
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut()
       router.push('/')
-    } catch (error) {
-      console.error('Error signing out:', error)
+    } catch (signOutError) {
+      console.error('Error signing out:', signOutError)
     }
   }
 
@@ -102,7 +98,7 @@ export default function ProfilePage() {
     if (username === currentUsername) return true // Same username is okay
     
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('username')
         .eq('username', username)
@@ -110,7 +106,7 @@ export default function ProfilePage() {
 
       // If no data found, username is available
       return !data
-    } catch (error) {
+    } catch {
       // If error (no matching record), username is available
       return true
     }
@@ -179,8 +175,9 @@ export default function ProfilePage() {
       
       // Clear message after 3 seconds
       setTimeout(() => setMessage(''), 3000)
-    } catch (error: any) {
-      setMessage(error.message)
+    } catch (saveError: unknown) {
+      const errorMessage = saveError instanceof Error ? saveError.message : 'An error occurred'
+      setMessage(errorMessage)
     } finally {
       setSaving(false)
     }

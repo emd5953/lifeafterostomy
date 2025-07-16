@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import Image from 'next/image'
 
 export default function LoginForm() {
   const [isLogin, setIsLogin] = useState(true)
@@ -33,7 +34,7 @@ export default function LoginForm() {
     if (!username || username.length < 3) return false
     
     try {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('username')
         .eq('username', username)
@@ -41,7 +42,7 @@ export default function LoginForm() {
 
       // If no data found, username is available
       return !data
-    } catch (error) {
+    } catch {
       // If error (no matching record), username is available
       return true
     }
@@ -55,12 +56,12 @@ export default function LoginForm() {
 
     try {
       if (isLogin) {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error: loginError } = await supabase.auth.signInWithPassword({
           email,
           password,
         })
 
-        if (error) throw error
+        if (loginError) throw loginError
 
         setMessage('Login successful!')
         // The AuthContext will handle the redirect automatically
@@ -82,7 +83,7 @@ export default function LoginForm() {
           throw new Error('Username can only contain letters, numbers, and underscores')
         }
 
-        const { data, error } = await supabase.auth.signUp({
+        const { data: signupData, error: signupError } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -94,14 +95,14 @@ export default function LoginForm() {
           },
         })
 
-        if (error) throw error
+        if (signupError) throw signupError
 
         // Create profile entry
-        if (data.user) {
+        if (signupData.user) {
           const { error: profileError } = await supabase
             .from('profiles')
             .insert({
-              id: data.user.id,
+              id: signupData.user.id,
               username: username,
               full_name: fullName,
               ostomy_type: ostomyType,
@@ -115,8 +116,9 @@ export default function LoginForm() {
 
         setMessage('Registration successful! Please check your email to verify your account.')
       }
-    } catch (error: any) {
-      setError(error.message)
+    } catch (submitError: unknown) {
+      const errorMessage = submitError instanceof Error ? submitError.message : 'An error occurred'
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -124,16 +126,17 @@ export default function LoginForm() {
 
   const handleGoogleSignIn = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error: googleError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/dashboard`,
         },
       })
 
-      if (error) throw error
-    } catch (error: any) {
-      setError(error.message)
+      if (googleError) throw googleError
+    } catch (googleSignInError: unknown) {
+      const errorMessage = googleSignInError instanceof Error ? googleSignInError.message : 'An error occurred'
+      setError(errorMessage)
     }
   }
 
@@ -148,17 +151,19 @@ export default function LoginForm() {
         <div className="text-center">
           {/* LAO Logo */}
           <div className="flex justify-center mb-6">
-            <img 
+            <Image 
               src="/assets/LAOLogo_3.jpg" 
               alt="Life After Ostomy Logo" 
-              className="h-22 w-auto object-contain"
+              width={88}
+              height={88}
+              className="object-contain"
             />            
           </div>
           <h2 className="text-3xl font-extrabold text-gray-900">
             {isLogin ? 'Welcome Back' : 'Join Our Community'}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            {isLogin ? "Don't have an account?" : 'Already have an account?'}
+            {isLogin ? 'Don&apos;t have an account?' : 'Already have an account?'}
             <button
               type="button"
               className="font-medium text-emerald-600 hover:text-emerald-500 ml-1 transition-colors"
@@ -272,7 +277,7 @@ export default function LoginForm() {
                     name="ostomyType"
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
                     value={ostomyType}
-                    onChange={(e) => setOstomyType(e.target.value as any)}
+                    onChange={(e) => setOstomyType(e.target.value as typeof ostomyType)}
                   >
                     <option value="">Select your ostomy type</option>
                     <option value="colostomy">Colostomy</option>

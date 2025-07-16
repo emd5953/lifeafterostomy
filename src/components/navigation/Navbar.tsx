@@ -2,6 +2,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { ShoppingCart, User, Menu, X, ChevronDown, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -25,10 +26,12 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <div className="h-10 w-auto mr-3">
-                <img 
+                <Image 
                   src="/assets/LAOLogo_3.jpg" 
                   alt="Life After Ostomy Logo" 
-                  className="h-10 w-auto object-contain"
+                  width={40}
+                  height={40}
+                  className="object-contain"
                 />
               </div>
               <span className="text-xl font-bold text-emerald-700">Life After Ostomy</span>

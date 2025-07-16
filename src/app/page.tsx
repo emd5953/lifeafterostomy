@@ -1,5 +1,6 @@
 // src/app/page.tsx
 import Link from 'next/link'
+import Image from 'next/image'
 import { ShoppingBag, BookOpen, Users, Heart } from 'lucide-react'
 
 export default function Home() {
@@ -12,10 +13,12 @@ export default function Home() {
             {/* Large logo in hero */}
             <div className="flex justify-center mb-8">
               <div className="rounded-xl p-4 shadow-lg">
-                <img 
+                <Image 
                   src="/assets/LAOLogo_3.jpg" 
                   alt="Life After Ostomy Logo" 
-                  className="h-32 w-auto object-contain"
+                  width={128}
+                  height={128}
+                  className="object-contain"
                 />
               </div>
             </div>
@@ -52,7 +55,7 @@ export default function Home() {
               Everything You Need in One Place
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              From complete care kits to educational resources, we're here to support your journey
+              From complete care kits to educational resources, we&apos;re here to support your journey
             </p>
           </div>
 

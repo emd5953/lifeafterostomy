@@ -39,7 +39,8 @@ export default function ContactPage() {
         message: '',
         inquiryType: 'general'
       })
-    } catch (error) {
+    } catch (submitError) {
+      console.error('Form submission error:', submitError)
       setSubmitMessage('There was an error sending your message. Please try again.')
     } finally {
       setIsSubmitting(false)

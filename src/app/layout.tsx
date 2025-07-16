@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/navigation/Navbar'
 import { AuthProvider } from '@/contexts/AuthContext'
+import Image from 'next/image'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -33,7 +34,13 @@ export default function RootLayout({
                   {/* Logo in footer */}
                   <div className="flex items-center mb-4">
                     <div className="h-10 w-auto mr-3">
-                      <img src="/assets/LAOLogo_3.jpg" alt="Life After Ostomy Logo" className="h-10 w-auto object-contain" />
+                      <Image 
+                        src="/assets/LAOLogo_3.jpg" 
+                        alt="Life After Ostomy Logo" 
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                      />
                     </div>
                     <span className="text-xl font-bold">Life After Ostomy</span>
                   </div>

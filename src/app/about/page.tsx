@@ -221,7 +221,7 @@ export default function AboutPage() {
               Our Impact
             </h2>
             <p className="text-xl text-emerald-100 max-w-3xl mx-auto">
-              Together, we're making a difference in the ostomy community
+              Together, we&apos;re making a difference in the ostomy community
             </p>
           </div>
 
