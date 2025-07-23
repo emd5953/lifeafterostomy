@@ -86,7 +86,7 @@ export default function LoginPage() {
 
           <div className="mt-10 pt-10 border-t border-emerald-100">
             <blockquote className="text-gray-600 italic">
-              "Life After Ostomy gave me the confidence and support I needed during my recovery. The community here truly understands what we go through."
+              {`"Life After Ostomy gave me the confidence and support I needed during my recovery. The community here truly understands what we go through."`}
             </blockquote>
             <div className="mt-3 text-sm text-gray-500">
               - Sarah M., Community Member

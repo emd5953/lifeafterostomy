@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { ShoppingCart, Search, Check, Plus, Minus } from 'lucide-react'
+import { ShoppingCart, Search, Plus, Minus } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
 
 interface Product {

@@ -7,6 +7,7 @@ import { ShoppingCart, User, Menu, X, ChevronDown, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
+import { useRouter } from 'next/navigation'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -14,10 +15,19 @@ export default function Navbar() {
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
   const { user, loading, signOut } = useAuth()
   const { totalItems } = useCart()
+  const router = useRouter()
 
   const handleSignOut = async () => {
     await signOut()
     setIsUserDropdownOpen(false)
+  }
+
+  const handleCartClick = (e: React.MouseEvent) => {
+    if (!user) {
+      e.preventDefault()
+      // Redirect to login with cart as the return URL
+      router.push('/login?redirectTo=/cart')
+    }
   }
 
   return (
@@ -100,7 +110,10 @@ export default function Navbar() {
           {/* Right side icons */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Cart Icon with Item Count */}
-            <Link href="/cart" className="relative text-gray-700 hover:text-emerald-600 transition-colors">
+            <Link 
+              href="/cart" 
+              className="relative text-gray-700 hover:text-emerald-600 transition-colors"
+            >
               <ShoppingCart className="h-6 w-6" />
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
@@ -243,7 +256,11 @@ export default function Navbar() {
               
               <div className="flex items-center space-x-4 px-4 py-2">
                 {/* Mobile Cart Icon with Item Count */}
-                <Link href="/cart" className="relative text-gray-700 hover:text-emerald-600 transition-colors">
+                <Link 
+                  href="/cart" 
+                  onClick={handleCartClick}
+                  className="relative text-gray-700 hover:text-emerald-600 transition-colors"
+                >
                   <ShoppingCart className="h-6 w-6" />
                   {totalItems > 0 && (
                     <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">

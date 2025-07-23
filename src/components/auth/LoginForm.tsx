@@ -1,7 +1,7 @@
 // src/components/auth/LoginForm.tsx
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Loader2, CheckCircle, XCircle } from 'lucide-react'
@@ -63,8 +63,8 @@ export default function LoginForm() {
   }, [password])
 
   // Debounced username availability check
-  const checkUsernameAvailability = useCallback(
-    debounce(async (usernameToCheck: string) => {
+  const checkUsernameAvailability = useMemo(
+    () => debounce(async (usernameToCheck: string) => {
       if (!usernameToCheck || usernameToCheck.length < 3) {
         setUsernameAvailable(null)
         return
@@ -319,7 +319,7 @@ export default function LoginForm() {
             {isLogin ? 'Welcome Back' : 'Join Our Community'}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            {isLogin ? 'Don\'t have an account?' : 'Already have an account?'}
+            {isLogin ? "Don't have an account?" : 'Already have an account?'}
             <button
               type="button"
               className="font-medium text-emerald-600 hover:text-emerald-500 ml-1 transition-colors"
