@@ -3,7 +3,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { ShoppingCart, Search } from 'lucide-react'
+import { ShoppingCart, Search, Check, Plus, Minus } from 'lucide-react'
+import { useCart } from '@/contexts/CartContext'
 
 interface Product {
   id: string
@@ -27,6 +28,9 @@ export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [selectedOstomyType, setSelectedOstomyType] = useState<string>('')
+  
+  // Use the cart context
+  const { addToCart, items: cartItems, updateQuantity, removeFromCart } = useCart()
 
   const filterProducts = useCallback(() => {
     let filtered = products
@@ -84,9 +88,28 @@ export default function ProductsPage() {
     filterProducts()
   }, [filterProducts])
 
-  const addToCart = (product: Product) => {
-    // For now, just show an alert. Later we'll implement cart functionality
-    alert(`Added ${product.name} to cart!`)
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      image: product.image_url,
+      variant: product.ostomy_type
+    })
+  }
+
+  const handleUpdateQuantity = (product: Product, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeFromCart(product.id)
+    } else {
+      updateQuantity(product.id, newQuantity)
+    }
+  }
+
+  const getItemQuantityInCart = (productId: string) => {
+    const item = cartItems.find(item => item.id === productId)
+    return item ? item.quantity : 0
   }
 
   const clearFilters = () => {
@@ -200,79 +223,113 @@ export default function ProductsPage() {
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow border border-gray-100">
-                {/* Product Image Placeholder */}
-                <div className={`h-48 flex items-center justify-center ${
-                  product.category === 'care-kit' ? 'bg-gradient-to-br from-emerald-100 to-emerald-200' :
-                  product.category === 'book' ? 'bg-gradient-to-br from-teal-100 to-teal-200' :
-                  'bg-gradient-to-br from-cyan-100 to-cyan-200'
-                }`}>
-                  <div className={`text-center ${
-                    product.category === 'care-kit' ? 'text-emerald-700' :
-                    product.category === 'book' ? 'text-teal-700' :
-                    'text-cyan-700'
-                  } text-sm font-medium`}>
-                    <div className="text-2xl mb-2">
-                      {product.category === 'care-kit' && '📦'}
-                      {product.category === 'book' && '📚'}
-                      {product.category === 'individual-item' && '🔧'}
+            {filteredProducts.map((product) => {
+              const quantityInCart = getItemQuantityInCart(product.id)
+              
+              return (
+                <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow border border-gray-100">
+                  {/* Product Image Placeholder */}
+                  <div className={`h-48 flex items-center justify-center relative ${
+                    product.category === 'care-kit' ? 'bg-gradient-to-br from-emerald-100 to-emerald-200' :
+                    product.category === 'book' ? 'bg-gradient-to-br from-teal-100 to-teal-200' :
+                    'bg-gradient-to-br from-cyan-100 to-cyan-200'
+                  }`}>
+                    {/* Quantity in Cart Badge */}
+                    {quantityInCart > 0 && (
+                      <div className="absolute top-2 right-2 bg-emerald-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                        {quantityInCart}
+                      </div>
+                    )}
+                    
+                    <div className={`text-center ${
+                      product.category === 'care-kit' ? 'text-emerald-700' :
+                      product.category === 'book' ? 'text-teal-700' :
+                      'text-cyan-700'
+                    } text-sm font-medium`}>
+                      <div className="text-2xl mb-2">
+                        {product.category === 'care-kit' && '📦'}
+                        {product.category === 'book' && '📚'}
+                        {product.category === 'individual-item' && '🔧'}
+                      </div>
+                      Image Coming Soon
                     </div>
-                    Image Coming Soon
+                  </div>
+
+                  <div className="p-4">
+                    {/* Category Badge */}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                        product.category === 'care-kit' ? 'bg-emerald-100 text-emerald-800' :
+                        product.category === 'book' ? 'bg-teal-100 text-teal-800' :
+                        'bg-cyan-100 text-cyan-800'
+                      }`}>
+                        {formatCategoryName(product.category)}
+                      </span>
+                      <span className="text-xs text-gray-500 capitalize font-medium">
+                        {product.ostomy_type}
+                      </span>
+                    </div>
+
+                    {/* Product Name */}
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                      {product.name}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {product.description}
+                    </p>
+
+                    {/* Price and Stock */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xl font-bold text-gray-900">
+                        ${product.price.toFixed(2)}
+                      </span>
+                      <span className={`text-sm font-medium ${
+                        product.stock_quantity > 10 ? 'text-emerald-600' :
+                        product.stock_quantity > 0 ? 'text-yellow-600' :
+                        'text-red-600'
+                      }`}>
+                        {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
+                      </span>
+                    </div>
+
+                    {/* Add to Cart Button / Quantity Controls */}
+                    {quantityInCart > 0 ? (
+                      <div className="flex items-center justify-between bg-gray-100 rounded-lg p-1">
+                        <button
+                          onClick={() => handleUpdateQuantity(product, quantityInCart - 1)}
+                          className="w-10 h-10 flex items-center justify-center bg-white rounded-lg hover:bg-gray-50 transition-colors"
+                        >
+                          <Minus className="h-4 w-4 text-gray-600" />
+                        </button>
+                        
+                        <span className="font-semibold text-gray-900 min-w-[3rem] text-center">
+                          {quantityInCart}
+                        </span>
+                        
+                        <button
+                          onClick={() => handleUpdateQuantity(product, quantityInCart + 1)}
+                          disabled={quantityInCart >= product.stock_quantity}
+                          className="w-10 h-10 flex items-center justify-center bg-white rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                          <Plus className="h-4 w-4 text-gray-600" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleAddToCart(product)}
+                        disabled={product.stock_quantity === 0}
+                        className="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-medium"
+                      >
+                        <ShoppingCart className="h-4 w-4 mr-2" />
+                        {product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
+                      </button>
+                    )}
                   </div>
                 </div>
-
-                <div className="p-4">
-                  {/* Category Badge */}
-                  <div className="flex items-center justify-between mb-2">
-                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                      product.category === 'care-kit' ? 'bg-emerald-100 text-emerald-800' :
-                      product.category === 'book' ? 'bg-teal-100 text-teal-800' :
-                      'bg-cyan-100 text-cyan-800'
-                    }`}>
-                      {formatCategoryName(product.category)}
-                    </span>
-                    <span className="text-xs text-gray-500 capitalize font-medium">
-                      {product.ostomy_type}
-                    </span>
-                  </div>
-
-                  {/* Product Name */}
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                    {product.name}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                    {product.description}
-                  </p>
-
-                  {/* Price and Stock */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xl font-bold text-gray-900">
-                      ${product.price.toFixed(2)}
-                    </span>
-                    <span className={`text-sm font-medium ${
-                      product.stock_quantity > 10 ? 'text-emerald-600' :
-                      product.stock_quantity > 0 ? 'text-yellow-600' :
-                      'text-red-600'
-                    }`}>
-                      {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
-                    </span>
-                  </div>
-
-                  {/* Add to Cart Button */}
-                  <button
-                    onClick={() => addToCart(product)}
-                    disabled={product.stock_quantity === 0}
-                    className="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-medium"
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    {product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
-                  </button>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         ) : (
           /* No Results */

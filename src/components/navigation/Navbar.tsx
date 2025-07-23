@@ -6,12 +6,14 @@ import Image from 'next/image'
 import { ShoppingCart, User, Menu, X, ChevronDown, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useCart } from '@/contexts/CartContext'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false)
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
   const { user, loading, signOut } = useAuth()
+  const { totalItems } = useCart()
 
   const handleSignOut = async () => {
     await signOut()
@@ -97,8 +99,14 @@ export default function Navbar() {
 
           {/* Right side icons */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/cart" className="text-gray-700 hover:text-emerald-600 transition-colors">
+            {/* Cart Icon with Item Count */}
+            <Link href="/cart" className="relative text-gray-700 hover:text-emerald-600 transition-colors">
               <ShoppingCart className="h-6 w-6" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                  {totalItems}
+                </span>
+              )}
             </Link>
             
             {loading ? (
@@ -234,8 +242,14 @@ export default function Navbar() {
               </Link>
               
               <div className="flex items-center space-x-4 px-4 py-2">
-                <Link href="/cart" className="text-gray-700 hover:text-emerald-600 transition-colors">
+                {/* Mobile Cart Icon with Item Count */}
+                <Link href="/cart" className="relative text-gray-700 hover:text-emerald-600 transition-colors">
                   <ShoppingCart className="h-6 w-6" />
+                  {totalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                      {totalItems}
+                    </span>
+                  )}
                 </Link>
                 
                 {user ? (
