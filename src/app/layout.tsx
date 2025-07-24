@@ -6,7 +6,6 @@ import Navbar from '@/components/navigation/Navbar'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CartProvider } from '@/contexts/CartContext'
 import Image from 'next/image'
-import Head from 'next/head'
 import { Analytics } from '@vercel/analytics/next'
 
 // Initialize the Inter font
@@ -16,12 +15,52 @@ const inter = Inter({
   variable: '--font-inter',
 })
 
+// This is the correct way to handle metadata in App Router
 export const metadata: Metadata = {
   title: 'Life After Ostomy - Ostomy Care Kits and Resources',
   description:
     'Complete ostomy care kits and resources for colostomy, ileostomy, and urostomy. Books, knowledge, and support for life after ostomy surgery.',
   keywords:
     'ostomy, colostomy, ileostomy, urostomy, ostomy care, ostomy supplies, ostomy support',
+  // Add additional metadata fields
+  openGraph: {
+    title: 'Life After Ostomy - Ostomy Care Kits and Resources',
+    description: 'Complete ostomy care kits and resources for colostomy, ileostomy, and urostomy.',
+    url: 'https://lifeafterostomy.com', // Replace with your actual URL
+    siteName: 'Life After Ostomy',
+    images: [
+      {
+        url: '/assets/LAOLogo_3.jpg', // Replace with full URL in production
+        width: 1200,
+        height: 630,
+        alt: 'Life After Ostomy',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Life After Ostomy - Ostomy Care Kits and Resources',
+    description: 'Complete ostomy care kits and resources for life after ostomy surgery.',
+    images: ['/assets/LAOLogo_3.jpg'], // Replace with full URL in production
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png', // Add this file if you want Apple device support
+  },
 }
 
 export default function RootLayout({
@@ -31,9 +70,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <body className={inter.className}>
         <AuthProvider>
           <CartProvider>
@@ -71,16 +107,20 @@ export default function RootLayout({
                       <p className="text-sm text-emerald-100 mb-3">
                         Stay updated with tips and resources
                       </p>
-                      <div className="flex w-100">
+                      <form className="flex w-full">
                         <input
                           type="email"
                           placeholder="Your email"
                           className="flex-1 px-3 py-2 text-gray-900 rounded-l-md text-sm"
+                          required
                         />
-                        <button className="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-r-md text-xs font-medium transition-colors">
+                        <button 
+                          type="submit"
+                          className="bg-emerald-600 hover:bg-emerald-700 px-4 py-2 rounded-r-md text-xs font-medium transition-colors"
+                        >
                           Subscribe
                         </button>
-                      </div>
+                      </form>
                     </div>
                   </div>
 
