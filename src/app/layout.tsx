@@ -6,6 +6,7 @@ import Navbar from '@/components/navigation/Navbar'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CartProvider } from '@/contexts/CartContext'
 import Image from 'next/image'
+import { Analytics } from '@vercel/analytics/next'
 
 // Initialize the Inter font
 const inter = Inter({ 
@@ -152,6 +153,7 @@ export default function RootLayout({
             </footer>
           </CartProvider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   )
