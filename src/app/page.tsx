@@ -23,7 +23,7 @@ export default function Home() {
               </div>
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Website Under Development 
+              Website Under Development<br /> 
               Life After Ostomy
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
