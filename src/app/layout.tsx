@@ -16,6 +16,11 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || 
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
+    'http://localhost:3000'
+  ),
   title: 'Life After Ostomy - Ostomy Care Kits and Resources',
   description:
     'Complete ostomy care kits and resources for colostomy, ileostomy, and urostomy. Books, knowledge, and support for life after ostomy surgery.',
@@ -61,7 +66,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <AuthProvider>
           <CartProvider>
             <Navbar />
