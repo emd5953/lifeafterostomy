@@ -4,20 +4,20 @@
 
 ### GitHub - Code Repository
 **What it does:** Version control and source code storage  
-**Access:** [github.com](https://github.com) → Navigate to your "Life After Ostomy" repository  
+**Access:** [github.com](https://github.com/emd5953/lifeafterostomy) → Navigate to your "Life After Ostomy" repository  
 **Credentials:** Your GitHub username and password/personal access token
 
 ### Supabase - Database
 **What it does:** PostgreSQL database and backend services  
-**Access:** [supabase.com](https://supabase.com) → Select your "Life After Ostomy" project  
+**Access:** [supabase.com](https://supabase.com/dashboard/project/xxngjoxqzrufmophuvjd) → Select your "Life After Ostomy" project  
 **Credentials:** 
-- Project URL: `https://[your-project-id].supabase.co`
-- Public anon key: `[your-anon-key]`
+- Project URL: `https://xxngjoxqzrufmophuvjd.supabase.co`
+- Public anon key: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4bmdqb3hxenJ1Zm1vcGh1dmpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1NDA5NjksImV4cCI6MjA2ODExNjk2OX0.IR_HWe62rnYN_4fGjdwquzCpUbJHfDJp-5s1xUunye0`
 - Service role key: `[your-service-key]` (keep secret)
 
 ### Vercel - Website Hosting
 **What it does:** Web hosting and automatic deployment  
-**Access:** [vercel.com](https://vercel.com) → View your project dashboard  
+**Access:** [vercel.com](https://vercel.com/emd5953s-projects/personal-portfolio) → View your project dashboard  
 **Credentials:** Your Vercel account login connected to GitHub
 
 ---
