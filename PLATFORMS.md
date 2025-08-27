@@ -5,19 +5,22 @@
 ### GitHub - Code Repository
 **What it does:** Version control and source code storage  
 **Access:** [github.com](https://github.com/emd5953/lifeafterostomy) → Navigate to your "Life After Ostomy" repository  
-**Credentials:** Your GitHub username and password/personal access token
+**Credentials:** Your GitHub username and password/personal access token (Will add as collaborator to repo)
+**.env.local:** This goes to the root directory, and will be in teams message
 
 ### Supabase - Database
 **What it does:** PostgreSQL database and backend services  
 **Access:** [supabase.com](https://supabase.com/dashboard/project/xxngjoxqzrufmophuvjd) → Select your "Life After Ostomy" project  
+(Will add as collaborator/can migrate database when needed)
 **Credentials:** 
-- Project URL: `https://xxngjoxqzrufmophuvjd.supabase.co`
-- Public anon key: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4bmdqb3hxenJ1Zm1vcGh1dmpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1NDA5NjksImV4cCI6MjA2ODExNjk2OX0.IR_HWe62rnYN_4fGjdwquzCpUbJHfDJp-5s1xUunye0`
+- Project URL: `in env`
+- Public anon key: `in env`
 - Service role key: `[your-service-key]` (keep secret)
 
 ### Vercel - Website Hosting
 **What it does:** Web hosting and automatic deployment  
 **Access:** [vercel.com](https://vercel.com/emd5953s-projects/personal-portfolio) → View your project dashboard  
+(Will migrate or change ownership when needed)
 **Credentials:** Your Vercel account login connected to GitHub
 
 ---
@@ -60,7 +63,7 @@ Supabase is your complete backend solution, providing a PostgreSQL database, aut
 **Core Components:**
 
 **Database (PostgreSQL):**
-- Stores all your website data (user profiles, posts, settings, etc.)
+- Stores all your website data (user profiles, products, settings, etc.)
 - Provides powerful SQL querying capabilities
 - Includes built-in Row Level Security (RLS) for data protection
 
