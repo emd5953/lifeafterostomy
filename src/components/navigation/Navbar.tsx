@@ -55,7 +55,7 @@ export default function Navbar() {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-[110] transition-all duration-500 ${
         isScrolled 
           ? 'bg-white/95 backdrop-blur-sm shadow-sm' 
           : 'bg-white'
@@ -215,13 +215,13 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-20 bg-white z-30 animate-fade-up">
-          <div className="px-6 py-8 space-y-2 max-h-[calc(100vh-5rem)] overflow-y-auto">
+        <div className="lg:hidden fixed inset-0 top-20 bg-white z-[100]">
+          <div className="px-6 py-8 space-y-2 max-h-[calc(100vh-5rem)] overflow-y-auto bg-white">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block py-3 text-lg font-medium text-foreground/80 hover:text-foreground transition-colors duration-300 border-b border-border-subtle"
+                className="block py-3 text-lg font-medium text-gray-700 hover:text-gray-900 transition-colors duration-300 border-b border-gray-200"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {link.label}
@@ -229,14 +229,14 @@ export default function Navbar() {
             ))}
             
             {/* Mobile Shop Section */}
-            <div className="py-3 border-b border-border-subtle">
-              <p className="font-serif text-lg font-semibold text-foreground mb-3">Shop</p>
+            <div className="py-3 border-b border-gray-200">
+              <p className="font-serif text-lg font-semibold text-gray-900 mb-3">Shop</p>
               <div className="pl-4 space-y-2">
                 {shopLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block py-2 text-foreground/70 hover:text-foreground transition-colors duration-300"
+                    className="block py-2 text-gray-600 hover:text-gray-900 transition-colors duration-300"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {link.label}
@@ -253,11 +253,11 @@ export default function Navbar() {
                   handleCartClick(e)
                   setIsMenuOpen(false)
                 }}
-                className="flex items-center justify-between py-3 text-lg font-medium text-foreground/80"
+                className="flex items-center justify-between py-3 text-lg font-medium text-gray-700"
               >
                 <span>Cart</span>
                 {totalItems > 0 && (
-                  <span className="bg-foreground text-background text-sm font-medium rounded-full h-6 w-6 flex items-center justify-center">
+                  <span className="bg-gray-900 text-white text-sm font-medium rounded-full h-6 w-6 flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}
@@ -267,14 +267,14 @@ export default function Navbar() {
                 <div className="space-y-2">
                   <Link 
                     href="/dashboard" 
-                    className="block py-3 text-lg font-medium text-foreground/80 hover:text-foreground"
+                    className="block py-3 text-lg font-medium text-gray-700 hover:text-gray-900"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Dashboard
                   </Link>
                   <Link 
                     href="/profile" 
-                    className="block py-3 text-lg font-medium text-foreground/80 hover:text-foreground"
+                    className="block py-3 text-lg font-medium text-gray-700 hover:text-gray-900"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
