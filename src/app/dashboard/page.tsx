@@ -46,7 +46,7 @@ export default function DashboardPage() {
 
   const quickActions = [
     { href: '/products', icon: ShoppingBag, title: 'Shop Products', desc: 'Browse care kits & supplies' },
-    { href: '/ostomy-knowledge', icon: BookOpen, title: 'Learn & Explore', desc: 'Educational resources' },
+    { href: '/knowledge', icon: BookOpen, title: 'Learn & Explore', desc: 'Educational resources' },
     { href: '/contact', icon: User, title: 'Get Support', desc: 'Contact our team' },
   ]
 
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                   <div className="p-4 rounded-2xl border border-border">
                     <h4 className="font-semibold mb-1">Educational Guide</h4>
                     <p className="text-sm text-foreground/50 mb-3">Life after {profile.ostomy_type} surgery</p>
-                    <Link href="/ostomy-knowledge" className="inline-flex items-center text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-300">
+                    <Link href="/knowledge" className="inline-flex items-center text-sm font-medium text-foreground/70 hover:text-foreground transition-colors duration-300">
                       Read <ArrowRight className="h-3 w-3 ml-1" strokeWidth={1.5} />
                     </Link>
                   </div>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
               <p className="text-foreground/60 text-sm mb-4">Our team is here to support you.</p>
               <div className="space-y-2">
                 <Link href="/contact" className="block w-full btn-botanical py-3 text-center text-xs">Contact Support</Link>
-                <Link href="/ostomy-knowledge" className="block w-full btn-botanical-outline py-3 text-center text-xs">Browse FAQ</Link>
+                <Link href="/knowledge" className="block w-full btn-botanical-outline py-3 text-center text-xs">Browse FAQ</Link>
               </div>
             </div>
           </div>

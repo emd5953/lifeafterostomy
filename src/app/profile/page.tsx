@@ -184,7 +184,7 @@ export default function ProfilePage() {
               <h3 className="font-serif text-lg font-semibold mb-4">Quick Actions</h3>
               <div className="space-y-3">
                 <button onClick={() => router.push('/products')} className="w-full btn-botanical py-3">Shop Products</button>
-                <button onClick={() => router.push('/ostomy-knowledge')} className="w-full btn-botanical-outline py-3">Browse Resources</button>
+                <button onClick={() => router.push('/knowledge')} className="w-full btn-botanical-outline py-3">Browse Resources</button>
                 <button onClick={() => router.push('/contact')} className="w-full btn-botanical-outline py-3">Contact Support</button>
               </div>
             </div>
