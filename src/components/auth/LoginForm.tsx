@@ -123,8 +123,8 @@ export default function LoginForm() {
     finally { setLoading(false) }
   }
 
-  const getStrengthColor = () => ['bg-red-500', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-lime-500', 'bg-green-500'][passwordStrength] || 'bg-gray-200'
-  const getStrengthText = () => ['', 'Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][passwordStrength] || ''
+  const getStrengthColor = () => ['bg-gray-200', 'bg-red-500', 'bg-orange-500', 'bg-yellow-500', 'bg-lime-500', 'bg-green-500'][passwordStrength] ?? 'bg-gray-200'
+  const getStrengthText = () => ['', 'Very Weak', 'Weak', 'Fair', 'Good', 'Strong'][passwordStrength] ?? ''
 
   if (user) return null
 
