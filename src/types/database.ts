@@ -2,6 +2,34 @@
 export interface Database {
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          id: string
+          email: string
+          username: string | null
+          full_name: string | null
+          ostomy_type: 'colostomy' | 'ileostomy' | 'urostomy' | 'universal' | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          email: string
+          username?: string | null
+          full_name?: string | null
+          ostomy_type?: 'colostomy' | 'ileostomy' | 'urostomy' | 'universal' | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          username?: string | null
+          full_name?: string | null
+          ostomy_type?: 'colostomy' | 'ileostomy' | 'urostomy' | 'universal' | null
+          updated_at?: string
+        }
+      }
       users: {
         Row: {
           id: string
@@ -151,6 +179,7 @@ export interface Database {
   }
 }
 
+export type Profile = Database['public']['Tables']['profiles']['Row']
 export type User = Database['public']['Tables']['users']['Row']
 export type Product = Database['public']['Tables']['products']['Row']
 export type Order = Database['public']['Tables']['orders']['Row']

@@ -49,7 +49,8 @@ export default function LoginForm() {
     if (!usernameToCheck || usernameToCheck.length < 3) { setUsernameAvailable(null); return }
     setCheckingUsername(true)
     try {
-      const { data } = await supabase.from('profiles').select('username').eq('username', usernameToCheck).maybeSingle()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data } = await (supabase.from('profiles') as any).select('username').eq('username', usernameToCheck).maybeSingle()
       setUsernameAvailable(!data)
     } catch { setUsernameAvailable(null) }
     finally { setCheckingUsername(false) }
@@ -85,7 +86,8 @@ export default function LoginForm() {
         setMessage('Success! Redirecting...')
         setTimeout(() => router.push(redirectTo), 1000)
       } else {
-        const { data: existing } = await supabase.from('profiles').select('username').eq('username', username).maybeSingle()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { data: existing } = await (supabase.from('profiles') as any).select('username').eq('username', username).maybeSingle()
         if (existing) throw new Error('Username is taken')
         const { data, error } = await supabase.auth.signUp({
           email, password,
@@ -93,7 +95,8 @@ export default function LoginForm() {
         })
         if (error) throw error
         if (data.user) {
-          await supabase.from('profiles').insert({ id: data.user.id, username, full_name: fullName, ostomy_type: ostomyType, email, created_at: new Date().toISOString() })
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          await (supabase.from('profiles') as any).insert({ id: data.user.id, username, full_name: fullName, ostomy_type: ostomyType, email, created_at: new Date().toISOString() })
         }
         setMessage('Check your email to verify your account.')
         setEmail(''); setPassword(''); setFullName(''); setUsername(''); setOstomyType('')

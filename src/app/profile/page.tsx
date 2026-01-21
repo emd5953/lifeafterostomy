@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { User, Mail, Calendar, Heart, ShoppingBag, BookOpen, LogOut, Edit2, Save, X } from 'lucide-react'
+import type { Profile } from '@/types/database'
 
 interface UserProfile { id: string; email: string; full_name: string; username: string; ostomy_type: string; created_at: string }
 
@@ -25,7 +26,7 @@ export default function ProfilePage() {
       let profileData: UserProfile = { id: user.id, email: user.email || '', full_name: user.user_metadata?.full_name || '', username: user.user_metadata?.username || '', ostomy_type: user.user_metadata?.ostomy_type || '', created_at: user.created_at }
       
       try {
-        const { data: dbProfile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+        const { data: dbProfile } = await supabase.from('profiles').select('*').eq('id', user.id).single() as { data: Profile | null }
         if (dbProfile) profileData = { ...profileData, username: dbProfile.username || profileData.username, full_name: dbProfile.full_name || profileData.full_name, ostomy_type: dbProfile.ostomy_type || profileData.ostomy_type }
       } catch { /* use metadata */ }
       
@@ -48,7 +49,8 @@ export default function ProfilePage() {
       const { error: authError } = await supabase.auth.updateUser({ data: { full_name: editData.full_name, username: editData.username, ostomy_type: editData.ostomy_type } })
       if (authError) throw authError
       
-      await supabase.from('profiles').upsert({ id: profile!.id, username: editData.username, full_name: editData.full_name, ostomy_type: editData.ostomy_type, email: profile!.email })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabase.from('profiles') as any).upsert({ id: profile!.id, username: editData.username, full_name: editData.full_name, ostomy_type: editData.ostomy_type, email: profile!.email })
       
       if (profile) setProfile({ ...profile, ...editData })
       setIsEditing(false)

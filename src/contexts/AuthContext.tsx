@@ -51,8 +51,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Fetch user profile
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase.from('profiles') as any)
         .select('*')
         .eq('id', userId)
         .single()
@@ -124,8 +124,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const { full_name, username, ostomy_type } = session.user.user_metadata
             if (username) {
               try {
-                const { data: newProfile, error } = await supabase
-                  .from('profiles')
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const { data: newProfile, error } = await (supabase.from('profiles') as any)
                   .insert({
                     id: session.user.id,
                     username,
