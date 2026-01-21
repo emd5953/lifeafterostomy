@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { ShoppingCart, Search, Plus, Minus } from 'lucide-react'
+import { ShoppingCart, Search, Plus, Minus, Package, ArrowRight } from 'lucide-react'
 import { useCart } from '@/contexts/CartContext'
 
 interface Product {
@@ -29,12 +29,10 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [selectedOstomyType, setSelectedOstomyType] = useState<string>('')
   
-  // Use the cart context
   const { addToCart, items: cartItems, updateQuantity, removeFromCart } = useCart()
 
   const filterProducts = useCallback(() => {
     let filtered = products
-
     if (searchTerm.trim()) {
       const searchLower = searchTerm.toLowerCase()
       filtered = filtered.filter(product =>
@@ -42,17 +40,14 @@ export default function ProductsPage() {
         product.description.toLowerCase().includes(searchLower)
       )
     }
-
     if (selectedCategory) {
       filtered = filtered.filter(product => product.category === selectedCategory)
     }
-
     if (selectedOstomyType) {
       filtered = filtered.filter(product => 
         product.ostomy_type === selectedOstomyType || product.ostomy_type === 'universal'
       )
     }
-
     setFilteredProducts(filtered)
   }, [products, searchTerm, selectedCategory, selectedOstomyType])
 
@@ -60,74 +55,38 @@ export default function ProductsPage() {
     try {
       setLoading(true)
       setError('')
-      
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('name')
-
-      if (error) {
-        throw new Error(error.message)
-      }
-      
+      const { data, error } = await supabase.from('products').select('*').order('name')
+      if (error) throw new Error(error.message)
       setProducts(data || [])
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load products'
-      setError(errorMessage)
-      console.error('Error fetching products:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load products')
     } finally {
       setLoading(false)
     }
   }, [])
 
-  useEffect(() => {
-    fetchProducts()
-  }, [fetchProducts])
-
-  useEffect(() => {
-    filterProducts()
-  }, [filterProducts])
+  useEffect(() => { fetchProducts() }, [fetchProducts])
+  useEffect(() => { filterProducts() }, [filterProducts])
 
   const handleAddToCart = (product: Product) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1,
-      image: product.image_url,
-      variant: product.ostomy_type
-    })
+    addToCart({ id: product.id, name: product.name, price: product.price, quantity: 1, image: product.image_url, variant: product.ostomy_type })
   }
 
   const handleUpdateQuantity = (product: Product, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeFromCart(product.id)
-    } else {
-      updateQuantity(product.id, newQuantity)
-    }
+    if (newQuantity <= 0) removeFromCart(product.id)
+    else updateQuantity(product.id, newQuantity)
   }
 
-  const getItemQuantityInCart = (productId: string) => {
-    const item = cartItems.find(item => item.id === productId)
-    return item ? item.quantity : 0
-  }
-
-  const clearFilters = () => {
-    setSearchTerm('')
-    setSelectedCategory('')
-    setSelectedOstomyType('')
-  }
-
-  const formatCategoryName = (category: string) => {
-    return category.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())
-  }
+  const getItemQuantityInCart = (productId: string) => cartItems.find(item => item.id === productId)?.quantity || 0
+  const clearFilters = () => { setSearchTerm(''); setSelectedCategory(''); setSelectedOstomyType('') }
+  const formatCategoryName = (category: string) => category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen pt-20 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading products...</p>
+          <div className="w-16 h-16 rounded-full border-2 border-foreground/20 border-t-foreground animate-spin mx-auto mb-4" />
+          <p className="text-foreground/60">Loading products...</p>
         </div>
       </div>
     )
@@ -135,196 +94,88 @@ export default function ProductsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Unable to Load Products</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
-          <button
-            onClick={fetchProducts}
-            className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors"
-          >
-            Try Again
-          </button>
+      <div className="min-h-screen pt-20 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-6">
+            <span className="text-3xl">⚠️</span>
+          </div>
+          <h2 className="font-serif text-2xl font-semibold mb-3">Unable to Load Products</h2>
+          <p className="text-foreground/60 mb-6">{error}</p>
+          <button onClick={fetchProducts} className="btn-botanical">Try Again</button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Products</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Complete ostomy care kits, individual supplies, and educational resources 
-            to support your journey
-          </p>
+    <div className="min-h-screen pt-20">
+      <section className="section-botanical pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto">
+            <h1 className="font-serif text-5xl md:text-6xl font-semibold mb-4">Our <span className="italic">Products</span></h1>
+            <p className="text-lg text-foreground/70 leading-relaxed">Complete ostomy care kits, individual supplies, and educational resources to support your journey</p>
+          </div>
         </div>
+      </section>
 
-        {/* Filters */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+        <div className="card-botanical p-6 md:p-8 mb-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-foreground/40" strokeWidth={1.5} />
+              <input type="text" placeholder="Search products..." className="input-botanical pl-11" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
-
-            {/* Category Filter */}
-            <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
+            <select className="input-botanical appearance-none cursor-pointer" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
               <option value="">All Categories</option>
               <option value="care-kit">Care Kits</option>
               <option value="individual-item">Individual Items</option>
               <option value="book">Books</option>
             </select>
-
-            {/* Ostomy Type Filter */}
-            <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-              value={selectedOstomyType}
-              onChange={(e) => setSelectedOstomyType(e.target.value)}
-            >
+            <select className="input-botanical appearance-none cursor-pointer" value={selectedOstomyType} onChange={(e) => setSelectedOstomyType(e.target.value)}>
               <option value="">All Ostomy Types</option>
               <option value="colostomy">Colostomy</option>
               <option value="ileostomy">Ileostomy</option>
               <option value="urostomy">Urostomy</option>
               <option value="universal">Universal</option>
             </select>
-
-            {/* Clear Filters */}
-            <button
-              onClick={clearFilters}
-              className="px-4 py-2 text-emerald-700 border border-emerald-300 rounded-lg hover:bg-emerald-50 transition-colors font-medium"
-            >
-              Clear Filters
-            </button>
+            <button onClick={clearFilters} className="btn-botanical-outline">Clear Filters</button>
           </div>
         </div>
 
-        {/* Results Count */}
-        <div className="mb-6">
-          <p className="text-gray-600 font-medium">
-            Showing {filteredProducts.length} of {products.length} products
-          </p>
-        </div>
+        <p className="text-foreground/60 mb-8">Showing {filteredProducts.length} of {products.length} products</p>
 
-        {/* Products Grid */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product) => {
+            {filteredProducts.map((product, index) => {
               const quantityInCart = getItemQuantityInCart(product.id)
-              
               return (
-                <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow border border-gray-100">
-                  {/* Product Image Placeholder */}
-                  <div className={`h-48 flex items-center justify-center relative ${
-                    product.category === 'care-kit' ? 'bg-gradient-to-br from-emerald-100 to-emerald-200' :
-                    product.category === 'book' ? 'bg-gradient-to-br from-teal-100 to-teal-200' :
-                    'bg-gradient-to-br from-cyan-100 to-cyan-200'
-                  }`}>
-                    {/* Quantity in Cart Badge */}
-                    {quantityInCart > 0 && (
-                      <div className="absolute top-2 right-2 bg-emerald-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
-                        {quantityInCart}
-                      </div>
-                    )}
-                    
-                    <div className={`text-center ${
-                      product.category === 'care-kit' ? 'text-emerald-700' :
-                      product.category === 'book' ? 'text-teal-700' :
-                      'text-cyan-700'
-                    } text-sm font-medium`}>
-                      <div className="text-2xl mb-2">
-                        {product.category === 'care-kit' && '📦'}
-                        {product.category === 'book' && '📚'}
-                        {product.category === 'individual-item' && '🔧'}
-                      </div>
-                      Image Coming Soon
+                <div key={product.id} className={`card-botanical overflow-hidden group ${index % 3 === 1 ? 'md:translate-y-6' : ''}`}>
+                  <div className="relative h-48 bg-muted flex items-center justify-center overflow-hidden">
+                    {quantityInCart > 0 && <div className="absolute top-3 right-3 bg-foreground text-background text-xs font-medium rounded-full h-6 w-6 flex items-center justify-center z-10">{quantityInCart}</div>}
+                    <div className="text-center transition-transform duration-700 group-hover:scale-110">
+                      <span className="text-4xl mb-2 block opacity-50">{product.category === 'care-kit' ? '📦' : product.category === 'book' ? '📚' : '🔧'}</span>
+                      <span className="text-xs text-foreground/40 uppercase tracking-wider">Image Coming Soon</span>
                     </div>
                   </div>
-
-                  <div className="p-4">
-                    {/* Category Badge */}
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                        product.category === 'care-kit' ? 'bg-emerald-100 text-emerald-800' :
-                        product.category === 'book' ? 'bg-teal-100 text-teal-800' :
-                        'bg-cyan-100 text-cyan-800'
-                      }`}>
-                        {formatCategoryName(product.category)}
-                      </span>
-                      <span className="text-xs text-gray-500 capitalize font-medium">
-                        {product.ostomy_type}
-                      </span>
+                  <div className="p-5">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="px-3 py-1 text-xs font-medium tracking-wide uppercase rounded-full bg-muted text-foreground/70">{formatCategoryName(product.category)}</span>
+                      <span className="text-xs text-foreground/50 capitalize">{product.ostomy_type}</span>
                     </div>
-
-                    {/* Product Name */}
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                      {product.name}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                      {product.description}
-                    </p>
-
-                    {/* Price and Stock */}
+                    <h3 className="font-serif text-lg font-semibold mb-2 line-clamp-2 leading-snug">{product.name}</h3>
+                    <p className="text-foreground/60 text-sm mb-4 line-clamp-2 leading-relaxed">{product.description}</p>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-xl font-bold text-gray-900">
-                        ${product.price.toFixed(2)}
-                      </span>
-                      <span className={`text-sm font-medium ${
-                        product.stock_quantity > 10 ? 'text-emerald-600' :
-                        product.stock_quantity > 0 ? 'text-yellow-600' :
-                        'text-red-600'
-                      }`}>
-                        {product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}
-                      </span>
+                      <span className="font-serif text-xl font-semibold">${product.price.toFixed(2)}</span>
+                      <span className={`text-xs font-medium ${product.stock_quantity > 10 ? 'text-green-600' : product.stock_quantity > 0 ? 'text-amber-600' : 'text-red-600'}`}>{product.stock_quantity > 0 ? `${product.stock_quantity} in stock` : 'Out of stock'}</span>
                     </div>
-
-                    {/* Add to Cart Button / Quantity Controls */}
                     {quantityInCart > 0 ? (
-                      <div className="flex items-center justify-between bg-gray-100 rounded-lg p-1">
-                        <button
-                          onClick={() => handleUpdateQuantity(product, quantityInCart - 1)}
-                          className="w-10 h-10 flex items-center justify-center bg-white rounded-lg hover:bg-gray-50 transition-colors"
-                        >
-                          <Minus className="h-4 w-4 text-gray-600" />
-                        </button>
-                        
-                        <span className="font-semibold text-gray-900 min-w-[3rem] text-center">
-                          {quantityInCart}
-                        </span>
-                        
-                        <button
-                          onClick={() => handleUpdateQuantity(product, quantityInCart + 1)}
-                          disabled={quantityInCart >= product.stock_quantity}
-                          className="w-10 h-10 flex items-center justify-center bg-white rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                          <Plus className="h-4 w-4 text-gray-600" />
-                        </button>
+                      <div className="flex items-center justify-between bg-muted rounded-full p-1">
+                        <button onClick={() => handleUpdateQuantity(product, quantityInCart - 1)} className="w-10 h-10 flex items-center justify-center bg-background rounded-full hover:bg-white transition-colors duration-300"><Minus className="h-4 w-4" strokeWidth={1.5} /></button>
+                        <span className="font-medium min-w-[3rem] text-center">{quantityInCart}</span>
+                        <button onClick={() => handleUpdateQuantity(product, quantityInCart + 1)} disabled={quantityInCart >= product.stock_quantity} className="w-10 h-10 flex items-center justify-center bg-background rounded-full hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"><Plus className="h-4 w-4" strokeWidth={1.5} /></button>
                       </div>
                     ) : (
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        disabled={product.stock_quantity === 0}
-                        className="w-full bg-emerald-600 text-white py-2 px-4 rounded-lg hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center font-medium"
-                      >
-                        <ShoppingCart className="h-4 w-4 mr-2" />
-                        {product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}
-                      </button>
+                      <button onClick={() => handleAddToCart(product)} disabled={product.stock_quantity === 0} className="w-full btn-botanical py-3 disabled:opacity-50 disabled:cursor-not-allowed"><ShoppingCart className="h-4 w-4 mr-2" strokeWidth={1.5} />{product.stock_quantity > 0 ? 'Add to Cart' : 'Out of Stock'}</button>
                     )}
                   </div>
                 </div>
@@ -332,48 +183,28 @@ export default function ProductsPage() {
             })}
           </div>
         ) : (
-          /* No Results */
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
-            <p className="text-gray-600 mb-4">
-              Try adjusting your search terms or filters to find what you&apos;re looking for.
-            </p>
-            <button
-              onClick={clearFilters}
-              className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors"
-            >
-              Clear All Filters
-            </button>
+          <div className="text-center py-20">
+            <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6"><Search className="h-8 w-8 text-foreground/30" strokeWidth={1.5} /></div>
+            <h3 className="font-serif text-xl font-semibold mb-2">No products found</h3>
+            <p className="text-foreground/60 mb-6">Try adjusting your search terms or filters</p>
+            <button onClick={clearFilters} className="btn-botanical">Clear All Filters</button>
           </div>
         )}
 
-        {/* External Links Section */}
-        <div className="mt-16 bg-white rounded-xl shadow-sm p-8 border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Also Available On
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <a
-              href="#"
-              className="flex items-center justify-center p-6 border-2 border-orange-200 rounded-xl hover:border-orange-400 hover:shadow-md transition-all duration-200"
-            >
-              <div className="text-center">
-                <div className="text-4xl mb-3">📦</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">Amazon Store</h3>
-                <p className="text-gray-600 text-sm">Shop our books and select products on Amazon</p>
-              </div>
+        <div className="mt-24">
+          <h2 className="font-serif text-2xl font-semibold text-center mb-8">Also Available <span className="italic">On</span></h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            <a href="#" className="card-botanical p-8 text-center group">
+              <Package className="h-10 w-10 mx-auto mb-4 text-foreground/40 group-hover:text-foreground/60 transition-colors duration-300" strokeWidth={1.5} />
+              <h3 className="font-serif text-lg font-semibold mb-2">Amazon Store</h3>
+              <p className="text-foreground/60 text-sm mb-4">Shop our books and select products</p>
+              <span className="inline-flex items-center text-sm font-medium text-foreground/70 group-hover:text-foreground transition-colors duration-300">Visit Store<ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} /></span>
             </a>
-            
-            <a
-              href="#"
-              className="flex items-center justify-center p-6 border-2 border-emerald-200 rounded-xl hover:border-emerald-400 hover:shadow-md transition-all duration-200"
-            >
-              <div className="text-center">
-                <div className="text-4xl mb-3">🛒</div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">Shopify Store</h3>
-                <p className="text-gray-600 text-sm">Complete selection of ostomy care kits</p>
-              </div>
+            <a href="#" className="card-botanical p-8 text-center group">
+              <ShoppingCart className="h-10 w-10 mx-auto mb-4 text-foreground/40 group-hover:text-foreground/60 transition-colors duration-300" strokeWidth={1.5} />
+              <h3 className="font-serif text-lg font-semibold mb-2">Shopify Store</h3>
+              <p className="text-foreground/60 text-sm mb-4">Complete selection of care kits</p>
+              <span className="inline-flex items-center text-sm font-medium text-foreground/70 group-hover:text-foreground transition-colors duration-300">Visit Store<ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} /></span>
             </a>
           </div>
         </div>

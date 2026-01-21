@@ -7,7 +7,7 @@ export interface Database {
           id: string
           email: string
           full_name: string | null
-          ostomy_type: 'colostomy' | 'ileostomy' | 'urostomy' | null
+          ostomy_type: 'colostomy' | 'ileostomy' | 'urostomy' | 'universal' | null
           created_at: string
           updated_at: string
         }
@@ -15,7 +15,7 @@ export interface Database {
           id: string
           email: string
           full_name?: string | null
-          ostomy_type?: 'colostomy' | 'ileostomy' | 'urostomy' | null
+          ostomy_type?: 'colostomy' | 'ileostomy' | 'urostomy' | 'universal' | null
           created_at?: string
           updated_at?: string
         }
@@ -23,7 +23,7 @@ export interface Database {
           id?: string
           email?: string
           full_name?: string | null
-          ostomy_type?: 'colostomy' | 'ileostomy' | 'urostomy' | null
+          ostomy_type?: 'colostomy' | 'ileostomy' | 'urostomy' | 'universal' | null
           updated_at?: string
         }
       }

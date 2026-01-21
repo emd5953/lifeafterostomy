@@ -1,186 +1,199 @@
 // src/app/page.tsx
 import Link from 'next/link'
 import Image from 'next/image'
-import { ShoppingBag, BookOpen, Users, Heart } from 'lucide-react'
+import { ShoppingBag, BookOpen, Users, Heart, ArrowRight } from 'lucide-react'
 
 export default function Home() {
+  const features = [
+    {
+      icon: ShoppingBag,
+      title: 'Complete Care Kits',
+      description: 'Everything you need for ostomy care in convenient, organized kits',
+    },
+    {
+      icon: BookOpen,
+      title: 'Educational Books',
+      description: 'Books about life after ostomy for all age groups',
+    },
+    {
+      icon: Users,
+      title: 'Community Support',
+      description: 'Connect with others and access valuable resources',
+    },
+    {
+      icon: Heart,
+      title: 'Ongoing Care',
+      description: 'Easy reordering and personalized recommendations',
+    },
+  ]
+
+  const categories = [
+    {
+      title: 'Complete Care Kits',
+      description: 'Comprehensive kits with everything needed for ostomy care',
+      href: '/products?category=care-kit',
+      gradient: 'from-neutral-100 to-neutral-200',
+    },
+    {
+      title: 'Individual Items',
+      description: 'Individual ostomy supplies for specific needs',
+      href: '/products?category=individual-item',
+      gradient: 'from-stone-100 to-stone-200',
+    },
+    {
+      title: 'Educational Books',
+      description: 'Books about life after ostomy for all ages',
+      href: '/products?category=book',
+      gradient: 'from-zinc-100 to-zinc-200',
+    },
+  ]
+
   return (
-    <div>
+    <div className="pt-20">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white py-20">
+      <section className="section-botanical overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            {/* Large logo in hero */}
-            <div className="flex justify-center mb-8">
-              <div className="rounded-xl p-4 shadow-lg">
-                <Image 
-                  src="/assets/LAOLogo_3.jpg" 
-                  alt="Life After Ostomy Logo" 
-                  width={128}
-                  height={128}
-                  className="object-contain"
-                />
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Content */}
+            <div className="order-2 lg:order-1">
+              <p className="text-sm font-medium tracking-widest uppercase text-foreground/60 mb-4">
+                Website Under Development
+              </p>
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-semibold leading-[1.1] mb-6">
+                Life After{' '}
+                <span className="italic">Ostomy</span>
+              </h1>
+              <p className="text-lg md:text-xl text-foreground/70 leading-relaxed mb-8 max-w-lg">
+                Complete ostomy care kits and resources to help you thrive after surgery. 
+                Supporting colostomy, ileostomy, and urostomy patients with quality products and knowledge.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/products" className="btn-botanical">
+                  Shop Care Kits
+                  <ArrowRight className="ml-2 h-4 w-4" strokeWidth={1.5} />
+                </Link>
+                <Link href="/about" className="btn-botanical-outline">
+                  Learn More
+                </Link>
               </div>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              **Website Under Development**<br /> 
-              <br /> 
-              Life After Ostomy
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-              Complete ostomy care kits and resources to help you thrive after surgery. 
-              Supporting colostomy, ileostomy, and urostomy patients with quality products and knowledge.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/products"
-                className="bg-white text-emerald-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg"
-              >
-                Shop Care Kits
-              </Link>
-              <Link
-                href="/about"
-                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-emerald-700 transition-colors"
-              >
-                Learn More
-              </Link>
+
+            {/* Hero Image */}
+            <div className="order-1 lg:order-2 relative">
+              <div className="relative aspect-[3/4] md:aspect-square lg:aspect-[4/5] max-w-md mx-auto lg:max-w-none">
+                {/* Arch-shaped image container */}
+                <div className="absolute inset-0 arch-image bg-muted overflow-hidden transition-transform duration-700 hover:scale-[1.02]">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Image 
+                      src="/assets/LAOLogo_3.jpg" 
+                      alt="Life After Ostomy" 
+                      width={300}
+                      height={300}
+                      className="object-contain opacity-90"
+                      priority
+                    />
+                  </div>
+                </div>
+                {/* Decorative offset shape */}
+                <div className="absolute -bottom-4 -right-4 w-32 h-32 rounded-full bg-muted -z-10" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="section-botanical bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Everything You Need in One Place
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold mb-4">
+              Everything You Need in{' '}
+              <span className="italic">One Place</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-foreground/70 max-w-2xl mx-auto">
               From complete care kits to educational resources, we&apos;re here to support your journey
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShoppingBag className="h-8 w-8 text-emerald-700" />
+            {features.map((feature, index) => (
+              <div 
+                key={feature.title}
+                className={`text-center ${index % 2 === 1 ? 'md:translate-y-8' : ''}`}
+              >
+                <div className="w-16 h-16 rounded-full bg-background flex items-center justify-center mx-auto mb-5 shadow-sm transition-transform duration-500 hover:scale-110">
+                  <feature.icon className="h-7 w-7 text-foreground/80" strokeWidth={1.5} />
+                </div>
+                <h3 className="font-serif text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-foreground/60 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">Complete Care Kits</h3>
-              <p className="text-gray-600">
-                Everything you need for ostomy care in convenient, organized kits
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-teal-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="h-8 w-8 text-teal-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">Educational Books</h3>
-              <p className="text-gray-600">
-                Books about life after ostomy for all age groups
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-cyan-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-cyan-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">Community Support</h3>
-              <p className="text-gray-600">
-                Connect with others and access valuable resources
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-emerald-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="h-8 w-8 text-emerald-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">Ongoing Care</h3>
-              <p className="text-gray-600">
-                Easy reordering and personalized recommendations
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Product Categories */}
-      <section className="py-16 bg-white">
+      <section className="section-botanical">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Our Product Categories
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold mb-4">
+              Our <span className="italic">Collections</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-emerald-500 to-emerald-700"></div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">Complete Care Kits</h3>
-                <p className="text-gray-600 mb-4">
-                  Comprehensive kits with everything needed for ostomy care
-                </p>
-                <Link
-                  href="/products?category=care-kit"
-                  className="text-emerald-600 hover:text-emerald-800 font-semibold inline-flex items-center"
-                >
-                  Shop Care Kits →
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-teal-400 to-teal-600"></div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">Individual Items</h3>
-                <p className="text-gray-600 mb-4">
-                  Individual ostomy supplies for specific needs
-                </p>
-                <Link
-                  href="/products?category=individual-item"
-                  className="text-teal-600 hover:text-teal-800 font-semibold inline-flex items-center"
-                >
-                  Shop Individual Items →
-                </Link>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-cyan-400 to-cyan-600"></div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">Educational Books</h3>
-                <p className="text-gray-600 mb-4">
-                  Books about life after ostomy for all ages
-                </p>
-                <Link
-                  href="/products?category=book"
-                  className="text-cyan-600 hover:text-cyan-800 font-semibold inline-flex items-center"
-                >
-                  Shop Books →
-                </Link>
-              </div>
-            </div>
+            {categories.map((category, index) => (
+              <Link
+                key={category.title}
+                href={category.href}
+                className={`group card-botanical overflow-hidden ${index === 1 ? 'md:translate-y-12' : ''}`}
+              >
+                <div className={`h-56 bg-gradient-to-br ${category.gradient} flex items-center justify-center transition-all duration-700 group-hover:scale-105`}>
+                  <span className="text-6xl opacity-30">
+                    {index === 0 && '📦'}
+                    {index === 1 && '🔧'}
+                    {index === 2 && '📚'}
+                  </span>
+                </div>
+                <div className="p-8">
+                  <h3 className="font-serif text-xl font-semibold mb-2 group-hover:text-foreground/80 transition-colors duration-300">
+                    {category.title}
+                  </h3>
+                  <p className="text-foreground/60 mb-4 leading-relaxed">
+                    {category.description}
+                  </p>
+                  <span className="inline-flex items-center text-sm font-medium tracking-wide uppercase text-foreground/70 group-hover:text-foreground transition-colors duration-300">
+                    Explore
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.5} />
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Get Started?
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join thousands of people who trust Life After Ostomy for their care needs
-          </p>
-          <Link
-            href="/products"
-            className="bg-white text-emerald-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors inline-block shadow-lg"
-          >
-            Shop Now
-          </Link>
+      <section className="section-botanical bg-foreground text-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="font-serif text-4xl md:text-5xl font-semibold mb-6">
+              Ready to Get{' '}
+              <span className="italic">Started?</span>
+            </h2>
+            <p className="text-xl text-background/70 mb-10 leading-relaxed">
+              Join thousands of people who trust Life After Ostomy for their care needs
+            </p>
+            <Link
+              href="/products"
+              className="inline-flex items-center justify-center px-8 py-4 bg-background text-foreground rounded-full text-sm font-medium tracking-widest uppercase hover:bg-background/90 transition-all duration-300"
+            >
+              Shop Now
+              <ArrowRight className="ml-2 h-4 w-4" strokeWidth={1.5} />
+            </Link>
+          </div>
         </div>
       </section>
     </div>

@@ -1,26 +1,235 @@
 @import "tailwindcss";
 
+/* ============================================
+   BOTANICAL / ORGANIC SERIF DESIGN SYSTEM
+   Light theme only - warm, organic feel
+   ============================================ */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --muted: #f5f5f4;
+  --muted-foreground: #737373;
+  --border: #e5e5e5;
+  --accent: #059669;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px -1px rgba(23, 23, 23, 0.04);
+  --shadow: 0 4px 6px -1px rgba(23, 23, 23, 0.05);
+  --shadow-md: 0 10px 15px -3px rgba(23, 23, 23, 0.05);
+  --shadow-lg: 0 20px 40px -10px rgba(23, 23, 23, 0.08);
+}
+
+/* Force light mode */
+html {
+  color-scheme: light;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --font-sans: var(--font-source-sans), system-ui, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+body {
+  background-color: #ffffff;
+  color: #171717;
+  font-family: var(--font-source-sans), system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #171717;
+}
+
+.font-serif {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+.font-sans {
+  font-family: var(--font-source-sans), system-ui, sans-serif;
+}
+
+/* ============================================
+   BOTANICAL COMPONENTS
+   ============================================ */
+
+/* Card */
+.card-botanical {
+  background: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid #f0f0f0;
+  transition: transform 500ms ease-out, box-shadow 500ms ease-out;
+}
+
+.card-botanical:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Primary Button */
+.btn-botanical {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-source-sans), system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 9999px;
+  background-color: #171717;
+  color: #ffffff;
+  transition: all 300ms ease-out;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-botanical:hover {
+  background-color: #262626;
+  transform: translateY(-1px);
+}
+
+/* Secondary Button */
+.btn-botanical-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  font-family: var(--font-source-sans), system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 9999px;
+  background-color: transparent;
+  color: #171717;
+  border: 1px solid #e5e5e5;
+  transition: all 300ms ease-out;
+  cursor: pointer;
+}
+
+.btn-botanical-outline:hover {
+  background-color: #f5f5f4;
+  border-color: #171717;
+}
+
+/* Arch Image */
+.arch-image {
+  border-radius: 200px 200px 0 0;
+  overflow: hidden;
+}
+
+/* ============================================
+   FORM INPUTS
+   ============================================ */
+
+.input-botanical {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-family: var(--font-source-sans), system-ui, sans-serif;
+  font-size: 1rem;
+  background-color: #f5f5f4;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  color: #171717;
+  transition: all 300ms ease-out;
+}
+
+.input-botanical:focus {
+  outline: none;
+  border-color: #059669;
+  background-color: #ffffff;
+}
+
+.input-botanical::placeholder {
+  color: #737373;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-fade-up {
+  animation: fadeUp 500ms ease-out forwards;
+}
+
+/* ============================================
+   SECTION SPACING
+   ============================================ */
+
+.section-botanical {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
+  .section-botanical {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+
+.bg-muted {
+  background-color: #f5f5f4;
+}
+
+.bg-foreground {
+  background-color: #171717;
+}
+
+.text-foreground {
+  color: #171717;
+}
+
+.text-background {
+  color: #ffffff;
+}
+
+.border-border {
+  border-color: #e5e5e5;
+}
+
+/* ============================================
+   FOCUS & SELECTION
+   ============================================ */
+
+*:focus-visible {
+  outline: 2px solid #059669;
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: #d1fae5;
+  color: #171717;
 }
